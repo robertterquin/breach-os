@@ -65,7 +65,7 @@ export function Window({
               aria-label={`Minimize ${title}`}
             >
               <svg viewBox="0 0 10 10" aria-hidden="true">
-                <path d="M2.5 5h5" />
+                <path d="M2.5 8h5" />
               </svg>
             </button>
           )}

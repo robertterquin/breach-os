@@ -14,14 +14,12 @@ body,
 /* The app is one screen; its views scroll inside their own panes. */
 body {
   overflow: hidden;
-  background-color: var(--desk);
-  background-image: radial-gradient(var(--desk-dot) 1.2px, transparent 1.3px);
-  background-size: 14px 14px;
+  background-color: var(--dead);
   color: var(--ink);
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   font-size: var(--text-md);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  -webkit-font-smoothing: none;
 }
 
 h1,
@@ -38,6 +36,11 @@ img {
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
+}
+
+/* Yellow vanishes on gray, so gray surfaces get a navy ring instead. */
+:is(.win__body, .menubar, .dock, .listview__toc) :focus-visible {
+  outline-color: var(--title);
 }
 
 button {
@@ -66,21 +69,4 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Wallpapers, switched from the terminal: wallpaper dots | grid | stripes | plain */
-:root[data-wallpaper='grid'] body {
-  background-image:
-    linear-gradient(var(--desk-dot) 1px, transparent 1px),
-    linear-gradient(90deg, var(--desk-dot) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-:root[data-wallpaper='stripes'] body {
-  background-image: repeating-linear-gradient(-45deg, var(--desk-dot) 0 2px, transparent 2px 16px);
-  background-size: auto;
-}
-
-:root[data-wallpaper='plain'] body {
-  background-image: none;
 }

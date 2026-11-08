@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from './lib/useMediaQuery';
-import { useTheme } from './lib/theme';
-import { REBOOT_EVENT } from './lib/wallpaper';
+import { useEffects } from './lib/effects';
+import { REBOOT_EVENT } from './apps/terminal/commands';
 import { BootScreen, MenuBar } from './os';
 import { DesktopView } from './views/desktop/DesktopView';
 import { ListView } from './views/list/ListView';
@@ -47,7 +47,7 @@ const bootLines = [
  * List view (one scrolling page), the phone home screen, or the desktop.
  */
 export default function App() {
-  const { theme, toggleTheme } = useTheme();
+  const { effects, toggleEffects } = useEffects();
   const isPhone = useMediaQuery('(max-width: 767px)');
   const [listView, setListView] = useState(readListViewPref);
   const [booting, setBooting] = useState(shouldBoot);
@@ -85,13 +85,14 @@ export default function App() {
 
   return (
     <>
-      <div className="shell" inert={booting}>
+      {/* data-repair: how healed the desktop looks (0–5). The challenge engine sets it in Phase 6. */}
+      <div className="shell surface" data-repair={0} inert={booting}>
         <h1 className="visually-hidden">breach.os, a capture-the-flag puzzle game</h1>
         <MenuBar
           listView={listView}
           onToggleListView={toggleListView}
-          theme={theme}
-          onToggleTheme={toggleTheme}
+          effects={effects}
+          onToggleEffects={toggleEffects}
           // Every view opens the terminal from the #terminal link.
           onOpenHome={() => (location.hash = 'terminal')}
         />

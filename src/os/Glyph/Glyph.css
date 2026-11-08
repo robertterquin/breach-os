@@ -7,14 +7,13 @@
 .glyph path,
 .glyph rect {
   stroke: var(--line);
-  stroke-width: 2.5;
+  stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 
 .glyph__shadow {
-  fill: var(--shadow-color);
-  stroke: none !important;
+  display: none;
 }
 
 .glyph__fill {
@@ -22,11 +21,11 @@
 }
 
 .glyph__paper {
-  fill: var(--window);
+  fill: var(--window-sunken);
 }
 
 .glyph__ink {
-  fill: var(--on-accent);
+  fill: var(--crt-bg);
 }
 
 .glyph__detail {
@@ -35,6 +34,6 @@
 
 .glyph__prompt {
   fill: none;
-  stroke: var(--mint) !important;
+  stroke: var(--crt-text) !important;
   stroke-width: 3 !important;
 }

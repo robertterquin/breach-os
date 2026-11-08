@@ -1,7 +1,9 @@
-import { isWallpaper, REBOOT_EVENT, setWallpaper, wallpapers } from '../../lib/wallpaper';
 import { apps, type AppId } from '../registry';
 
 export type Line = { kind: 'in' | 'out' | 'err'; text: string };
+
+/** Asks the app to replay the boot sequence. */
+export const REBOOT_EVENT = 'breach-os:reboot';
 
 type Context = {
   openApp: (id: AppId) => void;
@@ -14,7 +16,6 @@ type Result = string[] | { error: string } | 'clear';
 const help = [
   'Commands:',
   '  open <app>        open an app, e.g. open terminal',
-  '  wallpaper <name>  change the desktop: ' + wallpapers.join(', '),
   '  date              today’s date',
   '  clear             clear the screen',
 ];
@@ -27,12 +28,6 @@ const commands: Record<string, (args: string[], ctx: Context) => Result> = {
     if (!app) return { error: `open: no app called "${query}".` };
     ctx.openApp(app.id);
     return [`Opening ${app.label}.`];
-  },
-  wallpaper: (args) => {
-    const name = (args[0] ?? '').toLowerCase();
-    if (!isWallpaper(name)) return { error: `wallpaper: pick one of ${wallpapers.join(', ')}.` };
-    setWallpaper(name);
-    return [`Wallpaper set to ${name}.`];
   },
   date: () => [new Date().toLocaleDateString('en-PH', { dateStyle: 'full' })],
   clear: () => 'clear',

@@ -1,0 +1,76 @@
+.pv {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-5);
+  background: var(--window);
+}
+
+.pv__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.pv__note {
+  margin: 0 0 var(--space-5);
+}
+
+.pv__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: var(--space-5);
+}
+
+.pv__label {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+}
+
+.pv__surface {
+  display: flex;
+  flex-direction: column;
+  height: 380px;
+  overflow: hidden;
+  box-shadow: var(--bevel-in);
+}
+
+.pv__desk {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.pv__icons {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.pv__windows {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+
+.pv__crt {
+  min-height: 0;
+}
+
+.pv__amber {
+  color: var(--crt-amber);
+}
+
+.pv__sticky {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-2);
+  width: 130px;
+}
+
+.pv__dock {
+  display: flex;
+  justify-content: center;
+  padding-bottom: var(--space-2);
+}

@@ -1,22 +1,22 @@
-/* The terminal keeps a dark screen in both themes, like a real one. */
+/* Data layer: a green phosphor screen set into the window's sunken frame. */
 .term {
-  --term-bg: #16133a;
-  --term-text: #e9e6ff;
-  --term-muted: #b8b3e6;
-  --term-prompt: #9bebc8;
-  --term-error: #ff92be;
-
   display: flex;
   flex-direction: column;
   min-height: 280px;
-  margin: calc(-1 * var(--space-4));
-  padding: var(--space-4);
-  background: var(--term-bg);
-  color: var(--term-text);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  line-height: 1.5;
+  margin: calc(-1 * var(--space-3));
+  padding: var(--space-3) var(--space-4);
+  background: var(--crt-bg);
+  color: var(--crt-text);
+  box-shadow: var(--bevel-in);
+  font-family: var(--font-crt);
+  font-size: var(--text-lg);
+  line-height: 1.25;
   cursor: text;
+}
+
+:root:not([data-effects='off']) .term {
+  background-image: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.35) 0 1px, transparent 1px 3px);
+  text-shadow: 0 0 4px rgb(57 255 122 / 0.45);
 }
 
 .term__log {
@@ -30,15 +30,15 @@
 }
 
 .term__line--out {
-  color: var(--term-muted);
+  color: var(--crt-dim);
 }
 
 .term__line--err {
-  color: var(--term-error);
+  color: var(--crt-red);
 }
 
 .term__prompt {
-  color: var(--term-prompt);
+  color: var(--crt-text);
 }
 
 .term__form {
@@ -54,8 +54,8 @@
   padding: 0;
   border: 0;
   background: none;
-  color: var(--term-text);
-  caret-color: var(--term-prompt);
+  color: var(--crt-text);
+  caret-color: var(--crt-text);
   font: inherit;
 }
 
@@ -64,7 +64,8 @@
 }
 
 .term:focus-within {
-  box-shadow: inset 0 0 0 2px var(--term-prompt);
+  outline: 2px solid var(--focus);
+  outline-offset: -4px;
 }
 
 /* Phones: the terminal fills the whole app screen. */

@@ -25,13 +25,14 @@ Each component lives in its own folder with its stylesheet beside it.
 ```
 src/
   main.tsx, App.tsx    entry point and the shell that picks a view
-  styles/              design tokens and base page styles
-  lib/                 small helpers: links in the address bar, theme, wallpaper, scrolling
+  styles/              design tokens, base styles, and repair.css (the desktop's 6 healing stages)
+  lib/                 small helpers: links in the address bar, the Effects switch, scrolling
   os/                  desktop chrome: Window, MenuBar, Dock, DesktopIcon, BootScreen
   apps/                one folder per window; registry.ts lists them, AppContent.tsx picks one
   views/               the three layouts: desktop, list, phone
+  dev/                 preview of every component at every healing stage (development only, open /?preview)
 ```
 
 ## Status
 
-Phase 0 done: an empty desktop with the terminal. Next is Phase 1, the game design document.
+Phases 0–2 done: the empty desktop, the game design (kept private, since it holds the answers), and the visual system. Next is Phase 3, the challenge engine.

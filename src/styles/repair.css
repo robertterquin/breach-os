@@ -1,0 +1,96 @@
+/*
+ * The desktop heals as flags are found: data-repair on a .surface runs 0 to 5, one stage per
+ * two flags (see the game design doc's Healing plan). The app shell is one .surface; the dev
+ * preview page shows several side by side.
+ *
+ *   0  0 flags   static wallpaper, flickering icons, gray title bars, heavy scanlines
+ *   1  2 flags   icons fixed
+ *   2  4 flags   title bars, menu bar and dock get their colour back
+ *   3  6 flags   teal wallpaper on the left half
+ *   4  8 flags   full teal wallpaper, faint scanlines
+ *   5  10 flags  clean
+ *
+ * Motion (static, flicker) and scanlines are effects: off when the player turns Effects off
+ * (:root[data-effects='off']), and the global reduced-motion rule stops the motion.
+ */
+.surface {
+  --static: repeating-linear-gradient(0deg, #333333 0 2px, var(--dead) 2px 4px);
+  position: relative;
+  isolation: isolate;
+  background: var(--static);
+}
+
+.surface[data-repair='3'] {
+  background: linear-gradient(90deg, var(--desk) 0 50%, transparent 50%), var(--static);
+}
+
+.surface:is([data-repair='4'], [data-repair='5']) {
+  background: var(--desk);
+}
+
+/* Scanlines over everything on the surface, fading as the machine heals */
+.surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-scanlines);
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.22) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.surface:is([data-repair='2'], [data-repair='3'])::after {
+  opacity: 0.5;
+}
+
+.surface[data-repair='4']::after {
+  opacity: 0.25;
+}
+
+.surface[data-repair='5']::after,
+:root[data-effects='off'] .surface::after {
+  display: none;
+}
+
+/* Stages 0–1: the machine is dull: gray title bars, menu bar and dock */
+.surface:is([data-repair='0'], [data-repair='1'])
+  :is(.win__bar, .win[data-active='true'] .win__bar) {
+  background: var(--title-off);
+}
+
+.surface:is([data-repair='0'], [data-repair='1']) :is(.menubar, .dock) {
+  filter: grayscale(1) brightness(0.85);
+}
+
+/* Stage 0: icons are broken. Effects on: they flicker; off: they stay faded, no motion. */
+.surface[data-repair='0'] :is(.dicon .glyph, .dock__item .glyph) {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+:root:not([data-effects='off']) .surface[data-repair='0'] :is(.dicon .glyph, .dock__item .glyph) {
+  animation: icon-flicker 2.4s steps(1) infinite;
+}
+
+:root:not([data-effects='off'])
+  .surface:is([data-repair='0'], [data-repair='1'], [data-repair='2']) {
+  animation: static-roll 0.3s steps(2) infinite;
+}
+
+@keyframes icon-flicker {
+  0%,
+  86%,
+  94% {
+    opacity: 0.6;
+  }
+  90%,
+  97% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes static-roll {
+  to {
+    background-position: 0 4px;
+  }
+}

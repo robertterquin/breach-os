@@ -1,124 +1,86 @@
+/* A raised, beveled window with a navy title bar, like an old lab PC. */
 .win {
   display: flex;
   flex-direction: column;
   min-width: 0;
   max-height: 100%;
+  padding: 3px;
   background: var(--window);
   color: var(--ink);
-  border: var(--border-width) solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-hard-sm);
+  box-shadow: var(--bevel-out);
   overflow: hidden;
-  transition: box-shadow var(--duration-fast) var(--ease-out);
-}
-
-.win[data-active='true'] {
-  box-shadow: var(--shadow-hard);
 }
 
 .win__bar {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-1);
   min-height: var(--titlebar-height);
-  padding: 0 var(--space-3);
-  background: var(--window-sunken);
-  color: var(--ink);
-  border-bottom: var(--border-width) solid var(--line);
+  padding: 2px 3px 2px var(--space-2);
+  background: var(--title-off);
+  color: var(--on-title);
   user-select: none;
   touch-action: none;
 }
 
 .win[data-active='true'] .win__bar {
-  background: var(--accent);
-  color: var(--on-accent);
-}
-
-.win__controls {
-  display: flex;
-  margin-left: -4px;
-}
-
-/* Each control has a 24px touch target around a 16px dot. */
-.win__control {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: pointer;
-}
-
-.win__control::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: var(--border-width) solid currentColor;
-  border-radius: 50%;
-  background: var(--window);
-}
-
-.win[data-active='true'] .win__control::before {
-  background: #fff;
-}
-
-.win__control--close:hover::before {
-  background: var(--pink) !important;
-}
-
-.win__control svg {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  stroke: var(--on-accent);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  opacity: 0;
-  transition: opacity var(--duration-fast);
-}
-
-.win:not([data-active='true']) .win__control svg {
-  stroke: var(--ink);
-}
-
-.win__bar:hover .win__control svg,
-.win__control:focus-visible svg {
-  opacity: 1;
-}
-
-.win__control:focus-visible {
-  outline-offset: -1px;
-  border-radius: 50%;
+  background: var(--title);
 }
 
 .win__title {
   flex: 1;
   margin: 0;
   overflow: hidden;
-  font-family: var(--font-display);
-  font-size: var(--text-xs);
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
+/* Square buttons on the right, as on the original; the DOM keeps them first for tab order. */
+.win__controls {
+  order: 2;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 2px;
+}
+
+.win__control {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: var(--window);
+  color: var(--ink);
+  box-shadow: var(--bevel-out);
+  cursor: pointer;
+}
+
+.win__control:active {
+  box-shadow: var(--bevel-in);
+}
+
+.win__control svg {
+  width: 10px;
+  height: 10px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+.win__control:focus-visible {
+  outline-offset: 1px;
+}
+
 .win__body {
   flex: 1;
   min-height: 0;
-  padding: var(--space-4);
+  margin-top: 3px;
+  padding: var(--space-3);
   overflow: auto;
-  font-size: 0.9375rem;
-}
-
-/* Touch screens: always show the control glyphs, since there is no hover. */
-@media (hover: none) {
-  .win__control svg {
-    opacity: 1;
-  }
+  font-size: var(--text-md);
 }

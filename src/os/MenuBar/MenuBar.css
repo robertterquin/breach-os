@@ -3,22 +3,29 @@
   align-items: center;
   gap: var(--space-2);
   height: var(--menubar-height);
-  padding: 0 max(var(--space-3), env(safe-area-inset-right, 0px)) 0
-    max(var(--space-3), env(safe-area-inset-left, 0px));
+  padding: 0 max(var(--space-2), env(safe-area-inset-right, 0px)) 0
+    max(var(--space-2), env(safe-area-inset-left, 0px));
   background: var(--window);
   color: var(--ink);
-  border-bottom: var(--border-width) solid var(--line);
-  font-size: var(--text-xs);
+  box-shadow: var(--bevel-out);
+  font-size: var(--text-sm);
+}
+
+.menubar__brand,
+.menubar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .menubar__brand {
-  padding: 2px var(--space-2);
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: none;
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  cursor: pointer;
+  font-weight: 600;
 }
 
 .menubar__menus {
@@ -28,45 +35,28 @@
   min-width: 0;
 }
 
-.menubar__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px var(--space-2);
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: none;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
 .menubar__brand:hover,
 .menubar__item:hover {
-  background: var(--yellow);
-  color: var(--on-accent);
+  background: var(--title);
+  color: var(--on-title);
 }
 
 .menubar__item[aria-pressed='true'] {
-  background: var(--ink);
-  color: var(--window);
+  box-shadow: var(--bevel-in);
+}
+
+.menubar__item[aria-pressed='true']:hover {
+  box-shadow: none;
 }
 
 .menubar__check {
   font-size: 10px;
 }
 
-.menubar__icon {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
+/* The clock sits in a sunken tray, like a taskbar. */
 .menubar__clock {
+  padding: 2px var(--space-2);
+  box-shadow: var(--bevel-in);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
