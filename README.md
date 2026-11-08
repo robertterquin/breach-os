@@ -2,7 +2,7 @@
 
 A capture-the-flag puzzle game set on an abandoned school lab computer. The admin wiped SDCA-LAB-07 and vanished; recover ten flags to find out why. The desktop starts corrupted and heals as flags are found.
 
-Built from the desktop shell of [portfolio-os](https://github.com/robertterquin/portfolio-os) (tag `portfolio-midterm-v1`).
+Built from the desktop shell of my midterm portfolio, which this repo used to hold. It's preserved in the tag [`portfolio-midterm-v1`](https://github.com/robertterquin/breach-os/tree/portfolio-midterm-v1).
 
 ## Run it
 
