@@ -37,7 +37,7 @@ function shouldBoot() {
 
 /** Boot log from the design doc's story, reflecting how much the player has restored. */
 const bootLines = (game: GameState) => [
-  'BIOS SDCA-LAB-07 rev 2.1',
+  'BIOS LAB-07 rev 2.1',
   'Memory test ........ 65536K OK',
   'Mounting /home/guest .. OK',
   isFinished(game)

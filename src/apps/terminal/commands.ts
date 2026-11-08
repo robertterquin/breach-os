@@ -325,6 +325,6 @@ export async function run(input: string, ctx: Context): Promise<Result> {
 }
 
 export const welcomeLines: Line[] = [
-  { kind: 'out', text: 'breach.os terminal · SDCA-LAB-07' },
+  { kind: 'out', text: 'breach.os terminal · LAB-07' },
   { kind: 'out', text: 'Type cat readme.txt to begin, or help for every command.' },
 ];

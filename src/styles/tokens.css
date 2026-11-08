@@ -1,7 +1,7 @@
 /*
  * breach.os design tokens.
  *
- * Two layers, one rule: the "machine" (windows, buttons, dialogs) is an old school-lab PC;
+ * Two layers, one rule: the "machine" (windows, buttons, dialogs) is an old lab PC;
  * the "data" (terminal, cipher text, logs) is a green phosphor screen. One fixed look, no
  * day/night: the visual change in this game is the desktop healing (see repair.css).
  */

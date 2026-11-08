@@ -77,8 +77,8 @@ export function EndingApp() {
       {note && <p role="status">{note}</p>}
       {credits && (
         <p className="ending__credits">
-          breach.os by Robert Terquin Laqui. Set on a fictional SDCA lab machine; every person,
-          handle and event in it is made up.
+          breach.os by Robert Terquin Laqui. Set on a fictional lab machine; every person, handle
+          and event in it is made up.
         </p>
       )}
     </>

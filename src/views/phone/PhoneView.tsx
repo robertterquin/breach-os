@@ -57,7 +57,7 @@ export function PhoneView() {
   return (
     <main className="phone" aria-label="Home screen">
       <section className="phone__widget" aria-label="This machine">
-        <p className="phone__hello">SDCA-LAB-07</p>
+        <p className="phone__hello">LAB-07</p>
         <p className="phone__sub">The admin wiped this machine. Ten fragments survived.</p>
         <p className="phone__hint">
           {game.solved.length}/10 fragments recovered · {score(game)} pts

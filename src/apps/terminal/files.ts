@@ -168,7 +168,7 @@ export const root: DirNode = {
           text: [
             'time   source      query',
             '23:48  10.0.7.12   lab07.local',
-            '23:49  10.0.7.12   sdca.edu.local',
+            '23:49  10.0.7.12   auth.lab07.local',
             '23:50  10.0.7.12   update.lab07.local',
             '23:50  10.0.7.21   printer.lab07.local',
             '23:51  10.0.7.12   lab07.local',
