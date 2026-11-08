@@ -42,11 +42,11 @@ export function BootScreen({ lines, onDone }: BootScreenProps) {
       className="boot"
       data-leaving={leaving}
       role="status"
-      aria-label="student.os is starting"
+      aria-label="breach.os is starting"
       onClick={() => doneRef.current()}
     >
       <div className="boot__panel">
-        <p className="boot__logo">student.os</p>
+        <p className="boot__logo">breach.os</p>
         <ol className="boot__log">
           {lines.slice(0, shown).map((line) => (
             <li key={line}>{line}</li>

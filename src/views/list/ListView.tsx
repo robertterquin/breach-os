@@ -1,50 +1,26 @@
-import { useCallback, useEffect, useState } from 'react';
-import { AboutApp } from '../../apps/about/AboutApp';
+import { useCallback, useEffect } from 'react';
 import { AppContent } from '../../apps/AppContent';
-import type { ViewerItem } from '../../apps/certificate-viewer/viewerItem';
-import { aboutApp, folderApps, resolveTarget, stackApp, type Target } from '../../apps/registry';
-import { TechStackApp } from '../../apps/tech-stack/TechStackApp';
-import { ViewerDialog } from '../../apps/certificate-viewer/ViewerDialog';
-import { sections } from '../../content';
-import { readHashTarget, replaceHash } from '../../lib/hash';
+import { apps, type AppId } from '../../apps/registry';
+import { readHashApp, replaceHash } from '../../lib/hash';
 import { revealElement } from '../../lib/reveal';
 import { Window } from '../../os';
 import './ListView.css';
 
-const numberOf = new Map(sections.map((s, index) => [s.id as string, index + 1]));
-const requirementOf = new Map(sections.map((s) => [s.id as string, s.requirement]));
-
-/** "3. IoT project", or "1, 2, 7. Certificates" for the window that holds three sections. */
-function listTitle(app: (typeof folderApps)[number]) {
-  const ids = app.sections ?? [];
-  const numbers = ids.map((id) => numberOf.get(id)).join(', ');
-  const name = ids.length === 1 ? requirementOf.get(ids[0]) : app.label;
-  return `${numbers}. ${name}`;
-}
-
-/** Scrolls to a section: its own window, or its part of a shared window. */
-function scrollToTarget(target: Target, { animate = true } = {}) {
-  const { app, part } = resolveTarget(target);
-  revealElement(part ? `part-${part}` : `list-${app}`, { animate });
-}
-
-/** Every section on one plain scrolling page. The section list follows the requirement's order. */
+/** Every app on one plain scrolling page. Becomes the case file in Phase 7. */
 export function ListView() {
-  const [viewerItem, setViewerItem] = useState<ViewerItem | null>(null);
-
-  const goTo = useCallback((target: Target) => {
-    replaceHash(target === 'about' ? null : target);
-    scrollToTarget(target);
+  const goTo = useCallback((id: AppId) => {
+    replaceHash(id);
+    revealElement(`list-${id}`);
   }, []);
 
-  // Open on the section named in the link, and follow links like #iot.
+  // Open on the app named in the link, and follow links like #terminal.
   useEffect(() => {
-    const fromLink = readHashTarget();
+    const fromLink = readHashApp();
     // Landing on a link jumps straight there; later jumps animate.
-    if (fromLink) scrollToTarget(fromLink, { animate: false });
+    if (fromLink) revealElement(`list-${fromLink}`, { animate: false });
     const onHashChange = () => {
-      const target = readHashTarget();
-      if (target) goTo(target);
+      const id = readHashApp();
+      if (id) goTo(id);
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
@@ -53,19 +29,19 @@ export function ListView() {
   return (
     <main className="listview" aria-label="List view">
       <div className="listview__inner">
-        <nav className="listview__toc" aria-label="Jump to a section">
-          <p className="listview__toc-title">Sections</p>
+        <nav className="listview__toc" aria-label="Jump to an app">
+          <p className="listview__toc-title">Apps</p>
           <ol>
-            {sections.map((section) => (
-              <li key={section.id}>
+            {apps.map((app) => (
+              <li key={app.id}>
                 <a
-                  href={`#${section.id}`}
+                  href={`#${app.id}`}
                   onClick={(event) => {
                     event.preventDefault();
-                    goTo(section.id);
+                    goTo(app.id);
                   }}
                 >
-                  {section.requirement}
+                  {app.label}
                 </a>
               </li>
             ))}
@@ -73,44 +49,19 @@ export function ListView() {
         </nav>
 
         <div className="listview__sections">
-          <Window
-            title={aboutApp.windowTitle}
-            accent={aboutApp.accent}
-            className="listview__window"
-            rootProps={{ id: 'list-about', tabIndex: -1 }}
-          >
-            <AboutApp onOpenApp={goTo} showIndex={false} />
-          </Window>
-
-          <Window
-            title={stackApp.windowTitle}
-            accent={stackApp.accent}
-            className="listview__window"
-            rootProps={{ id: 'list-stack', tabIndex: -1 }}
-          >
-            <TechStackApp />
-          </Window>
-
-          {folderApps.map((app) => (
+          {apps.map((app) => (
             <Window
               key={app.id}
-              title={listTitle(app)}
+              title={app.windowTitle}
               accent={app.accent}
               className="listview__window"
               rootProps={{ id: `list-${app.id}`, tabIndex: -1 }}
             >
-              <AppContent
-                id={app.id}
-                onOpenApp={goTo}
-                onViewCertificate={setViewerItem}
-                viewerItem={viewerItem}
-              />
+              <AppContent id={app.id} onOpenApp={goTo} />
             </Window>
           ))}
         </div>
       </div>
-
-      {viewerItem && <ViewerDialog item={viewerItem} onClose={() => setViewerItem(null)} />}
     </main>
   );
 }

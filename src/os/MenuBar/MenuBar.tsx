@@ -8,7 +8,7 @@ type MenuBarProps = {
   onToggleListView?: () => void;
   theme: Theme;
   onToggleTheme: () => void;
-  onOpenAbout?: () => void;
+  onOpenHome?: () => void;
 };
 
 const clockFormat = new Intl.DateTimeFormat('en-PH', {
@@ -37,12 +37,12 @@ export function MenuBar({
   onToggleListView,
   theme,
   onToggleTheme,
-  onOpenAbout,
+  onOpenHome,
 }: MenuBarProps) {
   return (
     <header className="menubar">
-      <button type="button" className="menubar__brand" onClick={onOpenAbout}>
-        student.os
+      <button type="button" className="menubar__brand" onClick={onOpenHome}>
+        breach.os
       </button>
       <nav className="menubar__menus" aria-label="View options">
         {onToggleListView && (

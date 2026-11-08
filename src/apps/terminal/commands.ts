@@ -1,74 +1,33 @@
-import { profile, sections } from '../../content';
 import { isWallpaper, REBOOT_EVENT, setWallpaper, wallpapers } from '../../lib/wallpaper';
-import type { Target } from '../registry';
+import { apps, type AppId } from '../registry';
 
 export type Line = { kind: 'in' | 'out' | 'err'; text: string };
 
 type Context = {
-  openApp: (target: Target) => void;
+  openApp: (id: AppId) => void;
 };
 
 /** What `run` returns: lines to print, or 'clear' to wipe the screen. */
 type Result = string[] | { error: string } | 'clear';
 
+// The file system, submit, hint and status commands arrive in Phase 4.
 const help = [
   'Commands:',
-  '  whoami            who built this',
-  '  ls                list the portfolio sections',
-  '  open <section>    open a section, e.g. open capstone or open 4',
-  '  skills            technical skills (or open stack)',
-  '  contact           email and links',
+  '  open <app>        open an app, e.g. open terminal',
   '  wallpaper <name>  change the desktop: ' + wallpapers.join(', '),
   '  date              today’s date',
   '  clear             clear the screen',
 ];
 
-function findSection(query: string): Target | null {
-  const q = query.trim().toLowerCase();
-  if (!q) return null;
-  if (q === 'about' || q === 'about_me' || q === 'about_me.txt') return 'about';
-  if (['stack', 'tech', 'tech stack', 'skills'].includes(q)) return 'stack';
-  if (['certificates', 'certs'].includes(q)) return 'certificates';
-  const byNumber = Number(q);
-  if (Number.isInteger(byNumber) && byNumber >= 1 && byNumber <= sections.length) {
-    return sections.at(byNumber - 1)?.id ?? null;
-  }
-  const match = sections.find(
-    (s) =>
-      s.id === q ||
-      s.label.toLowerCase() === q ||
-      s.label.toLowerCase().startsWith(q) ||
-      s.requirement.toLowerCase().startsWith(q),
-  );
-  return match?.id ?? null;
-}
-
 const commands: Record<string, (args: string[], ctx: Context) => Result> = {
   help: () => help,
-  whoami: () => [
-    profile.fullName,
-    `${profile.yearLevel}, ${profile.program}, ${profile.school} (${profile.years})`,
-    profile.intro,
-  ],
-  ls: () =>
-    sections.map((s, i) => {
-      const count = `${s.entryCount} ${s.entryCount === 1 ? 'entry' : 'entries'}`;
-      const pending = s.pendingCount > 0 ? `, ${s.pendingCount} waiting on details` : '';
-      return `${i + 1}  ${s.id.padEnd(15)} ${count}${pending}`;
-    }),
   open: (args, ctx) => {
-    const id = findSection(args.join(' '));
-    if (!id) return { error: 'open: which section? Try ls to see the list.' };
-    ctx.openApp(id);
-    return [`Opening ${id}.`];
+    const query = args.join(' ').trim().toLowerCase();
+    const app = apps.find((a) => a.id === query || a.label.toLowerCase() === query);
+    if (!app) return { error: `open: no app called "${query}".` };
+    ctx.openApp(app.id);
+    return [`Opening ${app.label}.`];
   },
-  skills: () => profile.skills.flatMap((group) => [group.category, `  ${group.tools.join(', ')}`]),
-  contact: () => [
-    `email     ${profile.email}`,
-    `github    ${profile.links.github}`,
-    `linkedin  ${profile.links.linkedin}`,
-    `website   ${profile.links.professionalSite}`,
-  ],
   wallpaper: (args) => {
     const name = (args[0] ?? '').toLowerCase();
     if (!isWallpaper(name)) return { error: `wallpaper: pick one of ${wallpapers.join(', ')}.` };
@@ -78,16 +37,11 @@ const commands: Record<string, (args: string[], ctx: Context) => Result> = {
   date: () => [new Date().toLocaleDateString('en-PH', { dateStyle: 'full' })],
   clear: () => 'clear',
   echo: (args) => [args.join(' ')],
-  // Easter eggs: not listed in help.
+  // Not listed in help.
   reboot: () => {
     window.dispatchEvent(new Event(REBOOT_EVENT));
-    return ['Rebooting student.os.'];
+    return ['Rebooting breach.os.'];
   },
-  sudo: (args) =>
-    args.join(' ').toLowerCase() === 'hire robert'
-      ? ['Permission granted.', `Next step: email ${profile.email}`]
-      : { error: 'sudo: nice try. This desktop runs in read-only mode.' },
-  hello: () => ['Hi! Type help to see what I can do.'],
 };
 
 /** Runs one line of input and returns what to print. */
@@ -100,6 +54,6 @@ export function run(input: string, ctx: Context): Result {
 }
 
 export const welcomeLines: Line[] = [
-  { kind: 'out', text: 'student.os terminal' },
+  { kind: 'out', text: 'breach.os terminal · SDCA-LAB-07' },
   { kind: 'out', text: 'Type help to see the commands.' },
 ];

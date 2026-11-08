@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { profile, sections, type SectionId } from './content';
 import { useMediaQuery } from './lib/useMediaQuery';
 import { useTheme } from './lib/theme';
 import { REBOOT_EVENT } from './lib/wallpaper';
@@ -9,9 +8,9 @@ import { ListView } from './views/list/ListView';
 import { PhoneView } from './views/phone/PhoneView';
 import './App.css';
 
-const LIST_VIEW_KEY = 'student-os:list-view';
+const LIST_VIEW_KEY = 'breach-os:list-view';
 
-/** A link with ?view=list opens List view, e.g. for a grader. Otherwise the last choice wins. */
+/** A link with ?view=list opens List view. Otherwise the last choice wins. */
 function readListViewPref() {
   if (new URLSearchParams(location.search).get('view') === 'list') return true;
   try {
@@ -21,7 +20,7 @@ function readListViewPref() {
   }
 }
 
-const BOOT_KEY = 'student-os:booted';
+const BOOT_KEY = 'breach-os:booted';
 
 /** The boot sequence plays once per browser, and never for visitors who prefer less motion. */
 function shouldBoot() {
@@ -33,21 +32,15 @@ function shouldBoot() {
   }
 }
 
-/** Startup log lines, built from the real content counts. */
-function bootLines() {
-  const section = (id: SectionId) => sections.find((s) => s.id === id);
-  const found = (id: SectionId) => `${section(id)?.entryCount ?? 0} found`;
-  const pendingIoT = (section('iot')?.pendingCount ?? 0) + (section('capstone')?.pendingCount ?? 0);
-  return [
-    `student.os v1.0 for ${profile.displayName}`,
-    `Checking certifications ... ${found('certifications')}`,
-    `Checking course completions ... ${found('courses')}`,
-    `Loading projects ... ${found('projects')}`,
-    `Loading trophies ... ${found('competitions')}`,
-    `Mounting IoT Lab and Capstone ... ${pendingIoT > 0 ? 'details coming soon' : 'ready'}`,
-    'Ready.',
-  ];
-}
+// Story text from the design doc; the boot screen will reflect progress in Phase 6.
+const bootLines = [
+  'BIOS SDCA-LAB-07 rev 2.1',
+  'Memory test ........ 65536K OK',
+  'Mounting /home/guest .. OK',
+  'Mounting /home/admin .. FAILED (wiped 2024-03-14 23:58)',
+  'Recovering fragments .. 10 found, 10 corrupted',
+  'Starting breach.os',
+];
 
 /**
  * Picks one of three views of the same content:
@@ -58,7 +51,6 @@ export default function App() {
   const isPhone = useMediaQuery('(max-width: 767px)');
   const [listView, setListView] = useState(readListViewPref);
   const [booting, setBooting] = useState(shouldBoot);
-  const [lines] = useState(bootLines);
 
   // The terminal's hidden reboot command replays the boot sequence.
   useEffect(() => {
@@ -94,18 +86,18 @@ export default function App() {
   return (
     <>
       <div className="shell" inert={booting}>
-        <h1 className="visually-hidden">Robert Terquin Laqui, student portfolio</h1>
+        <h1 className="visually-hidden">breach.os, a capture-the-flag puzzle game</h1>
         <MenuBar
           listView={listView}
           onToggleListView={toggleListView}
           theme={theme}
           onToggleTheme={toggleTheme}
-          // Every view opens About Me from the #about link.
-          onOpenAbout={() => (location.hash = 'about')}
+          // Every view opens the terminal from the #terminal link.
+          onOpenHome={() => (location.hash = 'terminal')}
         />
         {listView ? <ListView /> : isPhone ? <PhoneView /> : <DesktopView />}
       </div>
-      {booting && <BootScreen lines={lines} onDone={finishBoot} />}
+      {booting && <BootScreen lines={bootLines} onDone={finishBoot} />}
     </>
   );
 }

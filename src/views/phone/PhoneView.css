@@ -18,23 +18,6 @@
   box-shadow: var(--shadow-hard);
 }
 
-.phone__intro {
-  display: grid;
-  grid-template-columns: 104px minmax(0, 1fr);
-  gap: var(--space-3);
-  align-items: center;
-}
-
-.phone__photo {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border: var(--border-width) solid var(--line);
-  border-radius: var(--radius);
-}
-
 .phone__hello {
   margin: 0 0 var(--space-2);
   font-family: var(--font-display);

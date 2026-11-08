@@ -1,7 +1,7 @@
 export const wallpapers = ['dots', 'grid', 'stripes', 'plain'] as const;
 export type Wallpaper = (typeof wallpapers)[number];
 
-const STORAGE_KEY = 'student-os:wallpaper';
+const STORAGE_KEY = 'breach-os:wallpaper';
 
 export function isWallpaper(value: string): value is Wallpaper {
   return (wallpapers as readonly string[]).includes(value);
@@ -30,4 +30,4 @@ export function applySavedWallpaper() {
 }
 
 /** Asks the app to replay the boot sequence. */
-export const REBOOT_EVENT = 'student-os:reboot';
+export const REBOOT_EVENT = 'breach-os:reboot';

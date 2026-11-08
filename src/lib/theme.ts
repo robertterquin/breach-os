@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export type Theme = 'day' | 'night';
 
-const STORAGE_KEY = 'student-os:theme';
+const STORAGE_KEY = 'breach-os:theme';
 
 function readSaved(): Theme | null {
   try {

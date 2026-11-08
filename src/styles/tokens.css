@@ -1,5 +1,5 @@
 /*
- * student.os design tokens.
+ * breach.os design tokens.
  *
  * Day is the default. Night applies when the OS prefers dark and the visitor has not
  * picked Day, or when data-theme="night" is set. The [data-theme] selectors also work on
