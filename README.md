@@ -37,6 +37,6 @@ src/
 
 ## Status
 
-Phases 0–3 done: the empty desktop, the game design (kept private, since it holds the answers), the visual system, and the challenge engine. Next is Phase 4, the terminal and its file system.
+Phases 0–4 done: the empty desktop, the game design (kept private, since it holds the answers), the visual system, the challenge engine, and the terminal with its file system. The whole game is playable from the terminal: type `help`. Next is Phase 5, the challenge windows.
 
-The repo never contains a flag, only its SHA-256 hash in `src/game/challenges.ts`. The tests use made-up practice flags.
+The repo never contains a flag in readable form, only its SHA-256 hash in `src/game/challenges.ts`. Three clue texts that show a flag are stored base64-encoded in `src/apps/terminal/files.ts`. The tests play the real game through the terminal and find each flag in the clues, so no flag is written in them.

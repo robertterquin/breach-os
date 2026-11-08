@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from './lib/useMediaQuery';
+import { repairStage } from './game/engine';
+import { GameProvider } from './game/GameProvider';
+import { useGame } from './game/useGame';
 import { useEffects } from './lib/effects';
 import { REBOOT_EVENT } from './apps/terminal/commands';
 import { BootScreen, MenuBar } from './os';
@@ -47,6 +50,15 @@ const bootLines = [
  * List view (one scrolling page), the phone home screen, or the desktop.
  */
 export default function App() {
+  return (
+    <GameProvider>
+      <Shell />
+    </GameProvider>
+  );
+}
+
+function Shell() {
+  const { game } = useGame();
   const { effects, toggleEffects } = useEffects();
   const isPhone = useMediaQuery('(max-width: 767px)');
   const [listView, setListView] = useState(readListViewPref);
@@ -85,8 +97,8 @@ export default function App() {
 
   return (
     <>
-      {/* data-repair: how healed the desktop looks (0–5). The challenge engine sets it in Phase 6. */}
-      <div className="shell surface" data-repair={0} inert={booting}>
+      {/* data-repair: how healed the desktop looks, one stage per two flags (styles/repair.css). */}
+      <div className="shell surface" data-repair={repairStage(game)} inert={booting}>
         <h1 className="visually-hidden">breach.os, a capture-the-flag puzzle game</h1>
         <MenuBar
           listView={listView}

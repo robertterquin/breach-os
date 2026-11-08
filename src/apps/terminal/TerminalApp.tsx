@@ -1,9 +1,15 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import { useGame } from '../../game/useGame';
 import type { AppId } from '../registry';
-import { run, welcomeLines, type Line } from './commands';
+import { promptFor, REBOOT_EVENT, run, welcomeLines, type Line } from './commands';
 import './TerminalApp.css';
 
+const reboot = () => window.dispatchEvent(new Event(REBOOT_EVENT));
+
 export function TerminalApp({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
+  const { game, setGame } = useGame();
+  const [cwd, setCwd] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
   const [lines, setLines] = useState<Line[]>(welcomeLines);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<string[]>([]);
@@ -17,17 +23,20 @@ export function TerminalApp({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
     endRef.current?.scrollIntoView({ block: 'nearest' });
   }, [lines]);
 
-  const submit = () => {
+  const submit = async () => {
     const command = input.trim();
-    const result = run(command, { openApp: onOpenApp });
+    const echo: Line = { kind: 'in', text: command, prompt: promptFor(cwd) };
     setInput('');
     setHistoryIndex(null);
     if (command) setHistory((h) => [...h, command]);
+    setBusy(true);
+    // Flag checks hash in the background, so commands can be async.
+    const result = await run(input, { game, setGame, cwd, setCwd, openApp: onOpenApp, reboot });
+    setBusy(false);
     if (result === 'clear') {
       setLines([]);
       return;
     }
-    const echo: Line = { kind: 'in', text: command };
     const output: Line[] = Array.isArray(result)
       ? result.map((text) => ({ kind: 'out', text }))
       : [{ kind: 'err', text: result.error }];
@@ -57,7 +66,7 @@ export function TerminalApp({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
           <p key={index} className={`term__line term__line--${line.kind}`}>
             {line.kind === 'in' && (
               <span className="term__prompt" aria-hidden="true">
-                ~ ${' '}
+                {line.prompt}{' '}
               </span>
             )}
             {line.text}
@@ -69,11 +78,12 @@ export function TerminalApp({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
         className="term__form"
         onSubmit={(event) => {
           event.preventDefault();
-          submit();
+          if (!busy) void submit();
         }}
       >
         <label htmlFor={inputId} className="term__prompt">
-          ~ $<span className="visually-hidden">Terminal command</span>
+          {promptFor(cwd)}
+          <span className="visually-hidden">Terminal command</span>
         </label>
         <input
           ref={inputRef}
