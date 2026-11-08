@@ -53,12 +53,19 @@
   font-size: 10px;
 }
 
-/* The clock sits in a sunken tray, like a taskbar. */
+/* Progress and the clock sit in sunken trays, like a taskbar. */
+.menubar__status,
 .menubar__clock {
   padding: 2px var(--space-2);
   box-shadow: var(--bevel-in);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .menubar__status {
+    display: none;
+  }
 }
 
 @media (max-width: 420px) {

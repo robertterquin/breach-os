@@ -37,6 +37,6 @@ src/
 
 ## Status
 
-Phases 0–5 done: the empty desktop, the game design (kept private, since it holds the answers), the visual system, the challenge engine, the terminal with its file system, and the challenge windows (crypto notepad, Lab Explorer, forensics viewer, log viewer, notes). Every challenge can be solved from the terminal or from its window. Next is Phase 6: score window, ending, and the repair moment.
+Phases 0–6 done: the full game, from boot to ending. Every challenge can be solved from the terminal or from its window; the desktop heals as flags are found, and `admin_message.txt` opens at 10/10. Next is Phase 7: phone, List view and accessibility polish.
 
 The repo never contains a flag in readable form, only its SHA-256 hash in `src/game/challenges.ts`. Three clue texts that show a flag are stored base64-encoded in `src/apps/terminal/files.ts`. The tests play the real game through the terminal and find each flag in the clues, so no flag is written in them.

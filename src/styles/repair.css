@@ -97,3 +97,36 @@
     background-position: 0 4px;
   }
 }
+
+/* The repair moment: a one-second burst of static and a jolt when a stage heals (App.tsx). */
+:root:not([data-effects='off']) .surface[data-repairing='true'] {
+  animation: repair-jolt 1.2s steps(6) 1;
+}
+
+:root:not([data-effects='off']) .surface[data-repairing='true']::after {
+  display: block;
+  opacity: 1;
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.18) 0 2px, transparent 2px 4px);
+  animation: repair-static 1.2s steps(6) 1 forwards;
+}
+
+@keyframes repair-jolt {
+  0%,
+  40% {
+    filter: brightness(1.6) contrast(1.4);
+    translate: 0 -2px;
+  }
+  60% {
+    translate: 0 2px;
+  }
+  100% {
+    filter: none;
+    translate: 0 0;
+  }
+}
+
+@keyframes repair-static {
+  to {
+    opacity: 0;
+  }
+}

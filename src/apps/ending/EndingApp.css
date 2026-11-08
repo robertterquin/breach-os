@@ -1,0 +1,24 @@
+.ending__result {
+  margin: var(--space-3) 0 var(--space-2);
+  font-weight: 600;
+}
+
+.ending__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ending__confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--title-danger);
+  font-weight: 600;
+}
+
+.ending__credits {
+  color: var(--ink-muted);
+}

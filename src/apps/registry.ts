@@ -1,7 +1,8 @@
 import type { Category } from '../game/challenges';
 import type { Accent, GlyphKind } from '../os';
 
-export type AppId = 'crypto' | 'web' | 'forensics' | 'network' | 'notes' | 'terminal';
+export type AppId =
+  'crypto' | 'web' | 'forensics' | 'network' | 'notes' | 'score' | 'ending' | 'terminal';
 
 export type AppMeta = {
   id: AppId;
@@ -15,6 +16,8 @@ export type AppMeta = {
   width: number;
   /** A challenge folder: shows Access denied until its category unlocks. */
   category?: Category;
+  /** Hidden from icons and lists until all 10 flags are found. */
+  endingOnly?: boolean;
 };
 
 const folder = (category: Category, windowTitle: string, width: number): AppMeta => ({
@@ -50,7 +53,24 @@ export const apps: AppMeta[] = [
     icon: 'file',
     width: 560,
   },
+  {
+    id: 'score',
+    windowTitle: 'Score',
+    label: 'score',
+    accent: 'yellow',
+    icon: 'app',
+    width: 520,
+  },
   terminalApp,
+  {
+    id: 'ending',
+    windowTitle: 'admin_message.txt - Notepad',
+    label: 'admin_message.txt',
+    accent: 'yellow',
+    icon: 'file',
+    width: 520,
+    endingOnly: true,
+  },
 ];
 
 const byId = new Map(apps.map((app) => [app.id, app]));
@@ -67,4 +87,4 @@ export function isLinkableAppId(value: string): value is AppId {
 }
 
 /** Apps pinned to the dock. */
-export const dockAppIds: AppId[] = ['terminal', 'notes'];
+export const dockAppIds: AppId[] = ['terminal', 'notes', 'score'];

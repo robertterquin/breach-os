@@ -8,6 +8,8 @@ type MenuBarProps = {
   effects: boolean;
   onToggleEffects: () => void;
   onOpenHome?: () => void;
+  /** Progress shown beside the clock, e.g. "3/10 flags · 250 pts". */
+  status?: string;
 };
 
 const clockFormat = new Intl.DateTimeFormat('en-PH', {
@@ -37,6 +39,7 @@ export function MenuBar({
   effects,
   onToggleEffects,
   onOpenHome,
+  status,
 }: MenuBarProps) {
   return (
     <header className="menubar">
@@ -69,6 +72,7 @@ export function MenuBar({
           Effects
         </button>
       </nav>
+      {status && <span className="menubar__status">{status}</span>}
       <Clock />
     </header>
   );

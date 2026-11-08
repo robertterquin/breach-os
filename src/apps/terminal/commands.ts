@@ -3,6 +3,7 @@
 import { categories, challenges, type Category } from '../../game/challenges.ts';
 import {
   findChallenge,
+  hintsUsed,
   isCategoryOpen,
   isFinished,
   lockReason,
@@ -168,8 +169,10 @@ function status(ctx: Context): Result {
       ? `  ${id.padEnd(10)} ${solvedCount(game, id)}/${total} solved`
       : `  ${id.padEnd(10)} locked: ${lockReason(game, id)}`;
   });
-  const hints = Object.values(game.hintsTaken).reduce((sum, n) => sum + n, 0);
-  return [...rows, `Flags ${game.solved.length}/10 · Score ${score(game)} · Hints ${hints}`];
+  return [
+    ...rows,
+    `Flags ${game.solved.length}/10 · Score ${score(game)} · Hints ${hintsUsed(game)}`,
+  ];
 }
 
 const findTotal = (category: Category) => challenges.filter((c) => c.category === category).length;

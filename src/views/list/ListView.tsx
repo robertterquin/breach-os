@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { AppContent } from '../../apps/AppContent';
-import { isLocked } from '../../apps/locked';
+import { iconLabel, isLocked, isShown, windowTitle } from '../../apps/appStatus';
 import { apps, type AppId } from '../../apps/registry';
 import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
@@ -35,35 +35,39 @@ export function ListView() {
         <nav className="listview__toc" aria-label="Jump to an app">
           <p className="listview__toc-title">Apps</p>
           <ol>
-            {apps.map((app) => (
-              <li key={app.id}>
-                <a
-                  href={`#${app.id}`}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    goTo(app.id);
-                  }}
-                >
-                  {isLocked(app, game) ? `${app.label} (locked)` : app.label}
-                </a>
-              </li>
-            ))}
+            {apps
+              .filter((app) => isShown(app, game))
+              .map((app) => (
+                <li key={app.id}>
+                  <a
+                    href={`#${app.id}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      goTo(app.id);
+                    }}
+                  >
+                    {iconLabel(app, game)}
+                  </a>
+                </li>
+              ))}
           </ol>
         </nav>
 
         <div className="listview__sections">
-          {apps.map((app) => (
-            <Window
-              key={app.id}
-              title={isLocked(app, game) ? `${app.label}/ - Access denied` : app.windowTitle}
-              accent={app.accent}
-              danger={isLocked(app, game)}
-              className="listview__window"
-              rootProps={{ id: `list-${app.id}`, tabIndex: -1 }}
-            >
-              <AppContent id={app.id} onOpenApp={goTo} />
-            </Window>
-          ))}
+          {apps
+            .filter((app) => isShown(app, game))
+            .map((app) => (
+              <Window
+                key={app.id}
+                title={windowTitle(app, game)}
+                accent={app.accent}
+                danger={isLocked(app, game)}
+                className="listview__window"
+                rootProps={{ id: `list-${app.id}`, tabIndex: -1 }}
+              >
+                <AppContent id={app.id} onOpenApp={goTo} />
+              </Window>
+            ))}
         </div>
       </div>
     </main>

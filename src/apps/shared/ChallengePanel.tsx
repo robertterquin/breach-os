@@ -1,6 +1,12 @@
 import { useId, useState } from 'react';
 import { categories } from '../../game/challenges';
-import { findChallenge, isCategoryOpen, submitFlag } from '../../game/engine';
+import {
+  findChallenge,
+  isCategoryOpen,
+  isFinished,
+  repairStage,
+  submitFlag,
+} from '../../game/engine';
 import { useGame } from '../../game/useGame';
 import { HintDialog } from './HintDialog';
 import './ChallengePanel.css';
@@ -39,7 +45,12 @@ export function ChallengePanel({ challengeId }: { challengeId: string }) {
     setFlag('');
     setMessage({
       kind: 'ok',
-      lines: [`✓ Correct. +${challenge.points} pts. Fragment recovered in notes.txt.`, ...unlocked],
+      lines: [
+        `✓ Correct. +${challenge.points} pts. Fragment recovered in notes.txt.`,
+        ...unlocked,
+        ...(repairStage(result.state) > repairStage(before) ? ['Repairing display drivers…'] : []),
+        ...(isFinished(result.state) ? ['All 10 flags recovered.'] : []),
+      ],
     });
   };
 

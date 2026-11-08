@@ -8,7 +8,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from 'react';
 import { AppContent } from '../../apps/AppContent';
-import { isLocked } from '../../apps/locked';
+import { iconLabel, isLocked, isShown, windowTitle } from '../../apps/appStatus';
 import { apps, dockAppIds, getApp, type AppId } from '../../apps/registry';
 import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
@@ -190,15 +190,17 @@ export function DesktopView() {
       }}
     >
       <nav className="desk__icons" aria-label="Desktop icons">
-        {apps.map((app) => (
-          <DesktopIcon
-            key={app.id}
-            label={isLocked(app, game) ? `${app.label} (locked)` : app.label}
-            kind={app.icon}
-            accent={app.accent}
-            {...iconProps(app.id)}
-          />
-        ))}
+        {apps
+          .filter((app) => isShown(app, game))
+          .map((app) => (
+            <DesktopIcon
+              key={app.id}
+              label={iconLabel(app, game)}
+              kind={app.icon}
+              accent={app.accent}
+              {...iconProps(app.id)}
+            />
+          ))}
       </nav>
 
       {stack.map((win, index) => {
@@ -212,7 +214,7 @@ export function DesktopView() {
               if (el) windowEls.current.set(win.id, el);
               else windowEls.current.delete(win.id);
             }}
-            title={locked ? `${app.label}/ - Access denied` : app.windowTitle}
+            title={windowTitle(app, game)}
             accent={app.accent}
             danger={locked}
             active={win.id === activeId}

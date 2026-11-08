@@ -12,6 +12,7 @@ import {
   nextHint,
   recoveredFragments,
   repairStage,
+  resultLine,
   score,
   submitFlag,
   takeHint,
@@ -211,4 +212,16 @@ test('the real game: 10 challenges, 1,300 points, unique hashes, two hints each'
     ['crypto', 'web', 'forensics', 'network'],
   );
   assert.ok(challenges.every((c) => c.id.startsWith(`${c.category}/`)));
+});
+
+test('the result line is spoiler-free and counts minutes and hints', async () => {
+  const rules = await practiceRules();
+  let state = newGame(0);
+  state = takeHint(state, 'crypto/01', rules)!.state;
+  for (const id of ['crypto/01', 'crypto/02', 'web/01', 'forensics/01']) {
+    state = (await submitFlag(state, flag(id), { now: 54 * 60000 }, rules)).state;
+  }
+  const line = resultLine(state, rules);
+  assert.equal(line, 'breach.os · 4/4 flags · 375 pts · 1 hint · 54 min');
+  assert.doesNotMatch(line, /FLAG/);
 });

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from './lib/useMediaQuery';
-import { repairStage } from './game/engine';
+import { isFinished, repairStage, score, type GameState } from './game/engine';
 import { GameProvider } from './game/GameProvider';
 import { useGame } from './game/useGame';
 import { useEffects } from './lib/effects';
@@ -35,15 +35,37 @@ function shouldBoot() {
   }
 }
 
-// Story text from the design doc; the boot screen will reflect progress in Phase 6.
-const bootLines = [
+/** Boot log from the design doc's story, reflecting how much the player has restored. */
+const bootLines = (game: GameState) => [
   'BIOS SDCA-LAB-07 rev 2.1',
   'Memory test ........ 65536K OK',
   'Mounting /home/guest .. OK',
-  'Mounting /home/admin .. FAILED (wiped 2024-03-14 23:58)',
-  'Recovering fragments .. 10 found, 10 corrupted',
+  isFinished(game)
+    ? 'Mounting /home/admin .. RESTORED (intruder locked out)'
+    : 'Mounting /home/admin .. FAILED (wiped 2024-03-14 23:58)',
+  `Recovering fragments .. ${game.solved.length} of 10 restored`,
   'Starting breach.os',
 ];
+
+/** Plays the "repairing" flash when the desktop heals a stage, and opens the ending at 10/10. */
+function useRepairMoment(game: GameState) {
+  const stage = repairStage(game);
+  const finished = isFinished(game);
+  const last = useRef({ stage, finished });
+  const [repairing, setRepairing] = useState(false);
+
+  useEffect(() => {
+    const before = last.current;
+    last.current = { stage, finished };
+    if (finished && !before.finished) location.hash = 'ending';
+    if (stage <= before.stage) return;
+    setRepairing(true);
+    const timer = window.setTimeout(() => setRepairing(false), 1200);
+    return () => window.clearTimeout(timer);
+  }, [stage, finished]);
+
+  return repairing;
+}
 
 /**
  * Picks one of three views of the same content:
@@ -59,6 +81,7 @@ export default function App() {
 
 function Shell() {
   const { game } = useGame();
+  const repairing = useRepairMoment(game);
   const { effects, toggleEffects } = useEffects();
   const isPhone = useMediaQuery('(max-width: 767px)');
   const [listView, setListView] = useState(readListViewPref);
@@ -98,19 +121,25 @@ function Shell() {
   return (
     <>
       {/* data-repair: how healed the desktop looks, one stage per two flags (styles/repair.css). */}
-      <div className="shell surface" data-repair={repairStage(game)} inert={booting}>
+      <div
+        className="shell surface"
+        data-repair={repairStage(game)}
+        data-repairing={repairing}
+        inert={booting}
+      >
         <h1 className="visually-hidden">breach.os, a capture-the-flag puzzle game</h1>
         <MenuBar
           listView={listView}
           onToggleListView={toggleListView}
           effects={effects}
           onToggleEffects={toggleEffects}
+          status={`${game.solved.length}/10 flags · ${score(game)} pts`}
           // Every view opens the terminal from the #terminal link.
           onOpenHome={() => (location.hash = 'terminal')}
         />
         {listView ? <ListView /> : isPhone ? <PhoneView /> : <DesktopView />}
       </div>
-      {booting && <BootScreen lines={bootLines} onDone={finishBoot} />}
+      {booting && <BootScreen lines={bootLines(game)} onDone={finishBoot} />}
     </>
   );
 }

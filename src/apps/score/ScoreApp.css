@@ -1,0 +1,52 @@
+.score__total {
+  margin: 0 0 var(--space-2);
+}
+
+.score__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--window-sunken);
+  box-shadow: var(--bevel-in);
+}
+
+.score__table th,
+.score__table td {
+  padding: 3px var(--space-2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.score__table thead th {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.score__table tr[data-status='solved'] td:last-child {
+  color: var(--title);
+  font-weight: 600;
+}
+
+.score__table tr[data-status='locked'] td {
+  color: var(--ink-muted);
+}
+
+.score__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.score__confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--title-danger);
+  font-weight: 600;
+}
+
+.score__result {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-muted);
+}

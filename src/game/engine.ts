@@ -173,3 +173,24 @@ export function isFinished(state: GameState, rules = gameRules): boolean {
 export function recoveredFragments(state: GameState, rules = gameRules): string[] {
   return rules.challenges.filter((c) => state.solved.includes(c.id)).map((c) => c.fragment);
 }
+
+/** Hints taken across every challenge. */
+export function hintsUsed(state: GameState): number {
+  return Object.values(state.hintsTaken).reduce((sum, n) => sum + n, 0);
+}
+
+/** The spoiler-free line the ending lets players copy and share. */
+export function resultLine(state: GameState, rules = gameRules): string {
+  const minutes = Math.max(
+    1,
+    Math.round(((state.finishedAt ?? Date.now()) - state.startedAt) / 60000),
+  );
+  const hints = hintsUsed(state);
+  return [
+    'breach.os',
+    `${state.solved.length}/${rules.challenges.length} flags`,
+    `${score(state, rules)} pts`,
+    `${hints} ${hints === 1 ? 'hint' : 'hints'}`,
+    `${minutes} min`,
+  ].join(' · ');
+}

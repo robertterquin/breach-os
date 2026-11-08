@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppContent } from '../../apps/AppContent';
-import { isLocked } from '../../apps/locked';
+import { iconLabel, isShown, windowTitle } from '../../apps/appStatus';
 import { apps, getApp, type AppId } from '../../apps/registry';
 import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
@@ -60,17 +60,19 @@ export function PhoneView() {
       </section>
 
       <nav className="phone__grid" aria-label="Apps">
-        {apps.map((app) => (
-          <DesktopIcon
-            key={app.id}
-            data-app-id={app.id}
-            className="phone__icon"
-            label={isLocked(app, game) ? `${app.label} (locked)` : app.label}
-            kind={app.icon}
-            accent={app.accent}
-            onClick={() => openApp(app.id)}
-          />
-        ))}
+        {apps
+          .filter((app) => isShown(app, game))
+          .map((app) => (
+            <DesktopIcon
+              key={app.id}
+              data-app-id={app.id}
+              className="phone__icon"
+              label={iconLabel(app, game)}
+              kind={app.icon}
+              accent={app.accent}
+              onClick={() => openApp(app.id)}
+            />
+          ))}
       </nav>
 
       {active && (
@@ -86,7 +88,7 @@ export function PhoneView() {
               Home
             </button>
             <h2 id="phone-app-title" ref={headingRef} tabIndex={-1}>
-              {isLocked(active, game) ? `${active.label}/ - Access denied` : active.windowTitle}
+              {windowTitle(active, game)}
             </h2>
           </header>
           <div className="phone__appbody">
