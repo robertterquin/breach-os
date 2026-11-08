@@ -32,8 +32,8 @@ export function ListView() {
   return (
     <main className="listview" aria-label="List view">
       <div className="listview__inner">
-        <nav className="listview__toc" aria-label="Jump to an app">
-          <p className="listview__toc-title">Apps</p>
+        <nav className="listview__toc" aria-label="Case file">
+          <p className="listview__toc-title">Case file</p>
           <ol>
             {apps
               .filter((app) => isShown(app, game))

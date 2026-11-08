@@ -37,6 +37,6 @@ src/
 
 ## Status
 
-Phases 0–6 done: the full game, from boot to ending. Every challenge can be solved from the terminal or from its window; the desktop heals as flags are found, and `admin_message.txt` opens at 10/10. Next is Phase 7: phone, List view and accessibility polish.
+Phases 0–7 done: the full game, from boot to ending, on desktop, phone and List view, playable by keyboard alone, with Lighthouse accessibility at 100 on every screen. Every challenge can be solved from the terminal or from its window; the desktop heals as flags are found, and `admin_message.txt` opens at 10/10. Next is Phase 8: playtest, balance and deploy.
 
 The repo never contains a flag in readable form, only its SHA-256 hash in `src/game/challenges.ts`. Three clue texts that show a flag are stored base64-encoded in `src/apps/terminal/files.ts`. The tests play the real game through the terminal and find each flag in the clues, so no flag is written in them.

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppContent } from '../../apps/AppContent';
 import { iconLabel, isShown, windowTitle } from '../../apps/appStatus';
 import { apps, getApp, type AppId } from '../../apps/registry';
+import { score } from '../../game/engine';
 import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
 import { accentClass, DesktopIcon } from '../../os';
@@ -43,7 +44,9 @@ export function PhoneView() {
   useEffect(() => {
     if (!activeId) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') goHome();
+      const target = event.target as HTMLElement | null;
+      // Fields keep Esc for themselves, and a dialog closes itself without leaving the app.
+      if (event.key === 'Escape' && !target?.closest('input, textarea, select, dialog')) goHome();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -56,7 +59,9 @@ export function PhoneView() {
       <section className="phone__widget" aria-label="This machine">
         <p className="phone__hello">SDCA-LAB-07</p>
         <p className="phone__sub">The admin wiped this machine. Ten fragments survived.</p>
-        <p className="phone__hint">Start with the terminal.</p>
+        <p className="phone__hint">
+          {game.solved.length}/10 fragments recovered · {score(game)} pts
+        </p>
       </section>
 
       <nav className="phone__grid" aria-label="Apps">

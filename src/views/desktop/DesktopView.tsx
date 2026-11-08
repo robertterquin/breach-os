@@ -133,7 +133,8 @@ export function DesktopView() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || !activeId) return;
       const target = event.target as HTMLElement | null;
-      if (target?.closest('input, textarea, select')) return;
+      // Fields keep Esc for themselves, and a dialog closes itself without taking its window along.
+      if (target?.closest('input, textarea, select, dialog')) return;
       closeApp(activeId);
     };
     window.addEventListener('keydown', onKeyDown);

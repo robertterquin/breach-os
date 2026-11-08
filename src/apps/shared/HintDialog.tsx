@@ -14,6 +14,8 @@ export function HintDialog({ challengeId, onClose }: { challengeId: string; onCl
   useEffect(() => {
     const dialog = ref.current;
     if (dialog && !dialog.open) dialog.showModal();
+    // Start on the main action, not the title bar's close button.
+    dialog?.querySelector<HTMLButtonElement>('.hint-dialog__actions .btn')?.focus();
   }, []);
 
   const close = () => ref.current?.close();
