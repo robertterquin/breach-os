@@ -17,6 +17,7 @@ Needs Node 20.19 or newer.
 | `npm run lint`      | Lint with oxlint                |
 | `npm run format`    | Format with Prettier            |
 | `npm run typecheck` | Type-check only                 |
+| `npm test`          | Run the game-engine tests       |
 
 ## Project structure
 
@@ -28,6 +29,7 @@ src/
   styles/              design tokens, base styles, and repair.css (the desktop's 6 healing stages)
   lib/                 small helpers: links in the address bar, the Effects switch, scrolling
   os/                  desktop chrome: Window, MenuBar, Dock, DesktopIcon, BootScreen
+  game/                the rules: challenges (flag hashes only), engine, saved progress, tests
   apps/                one folder per window; registry.ts lists them, AppContent.tsx picks one
   views/               the three layouts: desktop, list, phone
   dev/                 preview of every component at every healing stage (development only, open /?preview)
@@ -35,4 +37,6 @@ src/
 
 ## Status
 
-Phases 0–2 done: the empty desktop, the game design (kept private, since it holds the answers), and the visual system. Next is Phase 3, the challenge engine.
+Phases 0–3 done: the empty desktop, the game design (kept private, since it holds the answers), the visual system, and the challenge engine. Next is Phase 4, the terminal and its file system.
+
+The repo never contains a flag, only its SHA-256 hash in `src/game/challenges.ts`. The tests use made-up practice flags.
