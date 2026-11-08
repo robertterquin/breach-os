@@ -5,6 +5,7 @@ import {
   findChallenge,
   isCategoryOpen,
   isFinished,
+  lockReason,
   nextHint,
   repairStage,
   score,
@@ -16,7 +17,7 @@ import {
 } from '../../game/engine.ts';
 import { apps, type AppId } from '../registry.ts';
 import * as decoders from './decode.ts';
-import { extractStrings, intranet, readText, root, type FileNode, type Node } from './files.ts';
+import { extractStrings, pageAt, readText, root, type FileNode, type Node } from './files.ts';
 
 export type Line = { kind: 'in' | 'out' | 'err'; text: string; prompt?: string };
 
@@ -58,14 +59,6 @@ const help = [
   'Other',
   '  open <app>  date  clear',
 ];
-
-/** Why a folder is locked, e.g. "it opens after 2 crypto flags (1/2)". */
-function lockReason(game: GameState, category: Category): string {
-  const index = categories.findIndex((c) => c.id === category);
-  const before = categories.at(index - 1)!;
-  const need = categories.at(index)!.after;
-  return `it opens after ${need} ${before.id} flags (${solvedCount(game, before.id)}/${need})`;
-}
 
 type Found = { node: Node; path: string[] } | { locked: Category } | null;
 
@@ -218,15 +211,14 @@ function decode(input: string): Result {
 function curl(args: string[], ctx: Context): Result {
   const address = args[0];
   if (!address) return { error: 'curl: which address? e.g. curl lab07.local/admin' };
-  const match = address.replace(/^https?:\/\//, '').match(/^lab07\.local(\/.*)?$/);
-  if (!match) return { error: `curl: could not resolve ${address.split('/')[0]}` };
+  const page = pageAt(address);
+  if (page === 'no-host') return { error: `curl: could not resolve ${address.split('/')[0]}` };
   if (!isCategoryOpen(ctx.game, 'web')) {
     return {
       error: `curl: lab07.local is not answering yet; web/ ${lockReason(ctx.game, 'web')}.`,
     };
   }
-  const page = intranet[match[1] || '/'];
-  return page === undefined ? { error: 'curl: 404 Not Found' } : page.split('\n');
+  return page === 'not-found' ? { error: 'curl: 404 Not Found' } : page.split('\n');
 }
 
 const commands: Record<

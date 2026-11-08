@@ -1,0 +1,25 @@
+.hint-dialog {
+  width: min(400px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+}
+
+.hint-dialog::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+
+.hint-dialog p {
+  margin: 0 0 var(--space-3);
+}
+
+.hint-dialog__score {
+  color: var(--ink-muted);
+}
+
+.hint-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}

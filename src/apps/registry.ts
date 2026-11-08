@@ -1,7 +1,7 @@
+import type { Category } from '../game/challenges';
 import type { Accent, GlyphKind } from '../os';
 
-// Challenge folders join this list in Phase 4 and 5.
-export type AppId = 'terminal';
+export type AppId = 'crypto' | 'web' | 'forensics' | 'network' | 'notes' | 'terminal';
 
 export type AppMeta = {
   id: AppId;
@@ -13,7 +13,19 @@ export type AppMeta = {
   icon: GlyphKind;
   /** Preferred window width in px; shrinks to fit small screens. */
   width: number;
+  /** A challenge folder: shows Access denied until its category unlocks. */
+  category?: Category;
 };
+
+const folder = (category: Category, windowTitle: string, width: number): AppMeta => ({
+  id: category,
+  windowTitle,
+  label: category,
+  accent: 'yellow',
+  icon: 'folder',
+  width,
+  category,
+});
 
 export const terminalApp: AppMeta = {
   id: 'terminal',
@@ -25,7 +37,21 @@ export const terminalApp: AppMeta = {
 };
 
 /** Every app, in desktop-icon order. */
-export const apps: AppMeta[] = [terminalApp];
+export const apps: AppMeta[] = [
+  folder('crypto', 'crypto - Notepad', 640),
+  folder('web', 'Lab Explorer', 680),
+  folder('forensics', 'forensics - Viewer', 660),
+  folder('network', 'network - Log Viewer', 720),
+  {
+    id: 'notes',
+    windowTitle: 'notes.txt - Notepad',
+    label: 'notes.txt',
+    accent: 'yellow',
+    icon: 'file',
+    width: 560,
+  },
+  terminalApp,
+];
 
 const byId = new Map(apps.map((app) => [app.id, app]));
 
@@ -35,10 +61,10 @@ export function getApp(id: AppId): AppMeta {
   return app;
 }
 
-/** Apps that can be opened from a link such as #terminal. */
+/** Apps that can be opened from a link such as #crypto. */
 export function isLinkableAppId(value: string): value is AppId {
   return byId.has(value as AppId);
 }
 
 /** Apps pinned to the dock. */
-export const dockAppIds: AppId[] = ['terminal'];
+export const dockAppIds: AppId[] = ['terminal', 'notes'];

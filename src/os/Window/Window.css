@@ -27,6 +27,10 @@
   background: var(--title);
 }
 
+.win[data-danger='true'] .win__bar {
+  background: var(--title-danger);
+}
+
 .win__title {
   flex: 1;
   margin: 0;

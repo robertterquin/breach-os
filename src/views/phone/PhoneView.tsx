@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppContent } from '../../apps/AppContent';
+import { isLocked } from '../../apps/locked';
 import { apps, getApp, type AppId } from '../../apps/registry';
+import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
 import { accentClass, DesktopIcon } from '../../os';
 import './PhoneView.css';
 
 /** Phones: a home screen of app icons. Each app opens full screen with a Back button. */
 export function PhoneView() {
+  const { game } = useGame();
   const [activeId, setActiveId] = useState<AppId | null>(readHashApp);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -62,7 +65,7 @@ export function PhoneView() {
             key={app.id}
             data-app-id={app.id}
             className="phone__icon"
-            label={app.label}
+            label={isLocked(app, game) ? `${app.label} (locked)` : app.label}
             kind={app.icon}
             accent={app.accent}
             onClick={() => openApp(app.id)}
@@ -83,7 +86,7 @@ export function PhoneView() {
               Home
             </button>
             <h2 id="phone-app-title" ref={headingRef} tabIndex={-1}>
-              {active.windowTitle}
+              {isLocked(active, game) ? `${active.label}/ - Access denied` : active.windowTitle}
             </h2>
           </header>
           <div className="phone__appbody">

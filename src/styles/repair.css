@@ -54,7 +54,10 @@
 
 /* Stages 0–1: the machine is dull: gray title bars, menu bar and dock */
 .surface:is([data-repair='0'], [data-repair='1'])
-  :is(.win__bar, .win[data-active='true'] .win__bar) {
+  :is(
+    .win:not([data-danger='true']) .win__bar,
+    .win[data-active='true']:not([data-danger='true']) .win__bar
+  ) {
   background: var(--title-off);
 }
 

@@ -56,6 +56,15 @@ export function isCategoryOpen(state: GameState, category: Category, rules = gam
   return solvedCount(state, before.id, rules) >= rules.categories.at(index)!.after;
 }
 
+/** Why a folder is locked, e.g. "it opens after 2 crypto flags (1/2)". */
+export function lockReason(state: GameState, category: Category, rules = gameRules): string {
+  const index = rules.categories.findIndex((c) => c.id === category);
+  if (index <= 0) return 'it is open from the start';
+  const before = rules.categories.at(index - 1)!;
+  const need = rules.categories.at(index)!.after;
+  return `it opens after ${need} ${before.id} flags (${solvedCount(state, before.id, rules)}/${need})`;
+}
+
 export function isChallengeOpen(state: GameState, id: string, rules = gameRules): boolean {
   const challenge = findChallenge(id, rules);
   return !!challenge && isCategoryOpen(state, challenge.category, rules);

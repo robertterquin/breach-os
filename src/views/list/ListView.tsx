@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { AppContent } from '../../apps/AppContent';
+import { isLocked } from '../../apps/locked';
 import { apps, type AppId } from '../../apps/registry';
+import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
 import { revealElement } from '../../lib/reveal';
 import { Window } from '../../os';
@@ -8,6 +10,7 @@ import './ListView.css';
 
 /** Every app on one plain scrolling page. Becomes the case file in Phase 7. */
 export function ListView() {
+  const { game } = useGame();
   const goTo = useCallback((id: AppId) => {
     replaceHash(id);
     revealElement(`list-${id}`);
@@ -41,7 +44,7 @@ export function ListView() {
                     goTo(app.id);
                   }}
                 >
-                  {app.label}
+                  {isLocked(app, game) ? `${app.label} (locked)` : app.label}
                 </a>
               </li>
             ))}
@@ -52,8 +55,9 @@ export function ListView() {
           {apps.map((app) => (
             <Window
               key={app.id}
-              title={app.windowTitle}
+              title={isLocked(app, game) ? `${app.label}/ - Access denied` : app.windowTitle}
               accent={app.accent}
+              danger={isLocked(app, game)}
               className="listview__window"
               rootProps={{ id: `list-${app.id}`, tabIndex: -1 }}
             >

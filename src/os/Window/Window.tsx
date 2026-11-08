@@ -7,6 +7,8 @@ type WindowProps = {
   accent?: Accent;
   /** The focused window gets a stronger shadow and its title bar in full color. */
   active?: boolean;
+  /** A red title bar, for Access denied. */
+  danger?: boolean;
   onClose?: () => void;
   onMinimize?: () => void;
   /** Spread onto the title bar. The window manager uses this for dragging. */
@@ -23,6 +25,7 @@ export function Window({
   title,
   accent = 'yellow',
   active = true,
+  danger = false,
   onClose,
   onMinimize,
   titleBarProps,
@@ -40,6 +43,7 @@ export function Window({
       ref={ref}
       className={`win ${accentClass(accent)} ${className}`}
       data-active={active}
+      data-danger={danger}
       aria-labelledby={titleId}
       style={style}
     >

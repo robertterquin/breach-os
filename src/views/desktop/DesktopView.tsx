@@ -8,7 +8,9 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from 'react';
 import { AppContent } from '../../apps/AppContent';
+import { isLocked } from '../../apps/locked';
 import { apps, dockAppIds, getApp, type AppId } from '../../apps/registry';
+import { useGame } from '../../game/useGame';
 import { readHashApp, replaceHash } from '../../lib/hash';
 import { DesktopIcon, Dock, StickyNote, Window, type DockItem } from '../../os';
 import { clampPosition, useWindowManager, type Bounds } from '../../os/windowManager';
@@ -39,6 +41,7 @@ function initialWindows() {
 }
 
 export function DesktopView() {
+  const { game } = useGame();
   const deskRef = useRef<HTMLElement>(null);
   const [bounds, setBounds] = useState<Bounds>(viewportBounds);
   const boundsRef = useRef<Bounds>(bounds);
@@ -190,7 +193,7 @@ export function DesktopView() {
         {apps.map((app) => (
           <DesktopIcon
             key={app.id}
-            label={app.label}
+            label={isLocked(app, game) ? `${app.label} (locked)` : app.label}
             kind={app.icon}
             accent={app.accent}
             {...iconProps(app.id)}
@@ -201,6 +204,7 @@ export function DesktopView() {
       {stack.map((win, index) => {
         if (win.minimized) return null;
         const app = getApp(win.id);
+        const locked = isLocked(app, game);
         return (
           <Window
             key={win.id}
@@ -208,8 +212,9 @@ export function DesktopView() {
               if (el) windowEls.current.set(win.id, el);
               else windowEls.current.delete(win.id);
             }}
-            title={app.windowTitle}
+            title={locked ? `${app.label}/ - Access denied` : app.windowTitle}
             accent={app.accent}
+            danger={locked}
             active={win.id === activeId}
             onClose={() => closeApp(win.id)}
             onMinimize={() => minimizeApp(win.id)}
@@ -236,7 +241,7 @@ export function DesktopView() {
 
       {bounds.width >= 900 && (
         <StickyNote className="desk__sticky" tilt={3}>
-          start with the terminal. type help.
+          stuck? every folder has a Hint button. so does the terminal.
         </StickyNote>
       )}
 

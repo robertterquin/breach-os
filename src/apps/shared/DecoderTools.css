@@ -1,0 +1,27 @@
+.decoder {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.decoder__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.decoder__text {
+  width: 100%;
+  resize: vertical;
+  font-family: var(--font-crt);
+  font-size: var(--text-lg);
+}
+
+.decoder__arg {
+  width: 110px;
+}
+
+.decoder__error {
+  color: var(--crt-red);
+}

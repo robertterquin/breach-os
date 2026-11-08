@@ -1,0 +1,71 @@
+.forensics__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.forensics__hidden {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 28px;
+}
+
+.forensics__photo {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-2);
+  background: var(--window-sunken);
+  box-shadow: var(--bevel-in);
+}
+
+/* A grainy webcam frame of the desk, drawn in CSS. */
+.forensics__desk {
+  position: relative;
+  height: 150px;
+  background:
+    linear-gradient(transparent 62%, #5a4632 62%),
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.08) 0 1px, transparent 1px 3px), #9aa3a8;
+}
+
+.forensics__note {
+  position: absolute;
+  left: 58%;
+  bottom: 30%;
+  width: 34px;
+  height: 30px;
+  background: var(--sticky);
+  rotate: -6deg;
+}
+
+.forensics__photo figcaption {
+  margin-top: var(--space-1);
+  color: var(--ink-muted);
+}
+
+.forensics__props {
+  margin-top: var(--space-2);
+  border-collapse: collapse;
+  background: var(--window-sunken);
+  box-shadow: var(--bevel-in);
+}
+
+.forensics__props th,
+.forensics__props td {
+  padding: 3px var(--space-3);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.forensics__props th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.forensics__dump {
+  max-height: 200px;
+  margin-bottom: var(--space-2);
+  overflow: auto;
+}

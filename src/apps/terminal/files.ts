@@ -14,6 +14,8 @@ export type FileNode = {
   binary?: boolean;
   /** Photo properties, shown by `exif`. */
   exif?: [string, string][];
+  /** The challenge this file is the clue for, e.g. crypto/01. */
+  challenge?: string;
 };
 
 export type DirNode = {
@@ -85,12 +87,19 @@ export const root: DirNode = {
         {
           kind: 'file',
           name: '01_caesar.txt',
+          challenge: 'crypto/01',
           text: 'Qrwh wr vhoi: wkh urrp qdph lv wkh nhb. IODJ{z3of0ph_w0_ode_v3yhq}',
         },
-        { kind: 'file', name: '02_backup.b64', text: 'RkxBR3tiNHNlNjRfaXNfbjB0X2VuY3J5cHQxMG59' },
+        {
+          kind: 'file',
+          name: '02_backup.b64',
+          challenge: 'crypto/02',
+          text: 'RkxBR3tiNHNlNjRfaXNfbjB0X2VuY3J5cHQxMG59',
+        },
         {
           kind: 'file',
           name: '03_vigenere.txt',
+          challenge: 'crypto/03',
           text: 'QLBY{xci_olclmt_ref_l_tsst}\n\nkey: the room name',
         },
       ],
@@ -115,6 +124,7 @@ export const root: DirNode = {
         {
           kind: 'file',
           name: 'lab_photo.jpg',
+          challenge: 'forensics/01',
           binary: true,
           text: 'ÿØÿà JFIF ▒▓░ (an image: a desk with a sticky note; try exif lab_photo.jpg)',
           exif: [
@@ -124,10 +134,17 @@ export const root: DirNode = {
             ['Comment', 'RkxBR3tleDFmX3JlbWVtYmVyc19ldmVyeXRoMW5nfQ=='],
           ],
         },
-        { kind: 'file', name: 'memory.dmp', binary: true, text: memoryDump() },
+        {
+          kind: 'file',
+          name: 'memory.dmp',
+          challenge: 'forensics/02',
+          binary: true,
+          text: memoryDump(),
+        },
         {
           kind: 'file',
           name: '.bash_history',
+          challenge: 'forensics/03',
           text: [
             'cd /tmp',
             'wget http://x.net/gw_sync.exe',
@@ -147,6 +164,7 @@ export const root: DirNode = {
         {
           kind: 'file',
           name: 'dns.log',
+          challenge: 'network/01',
           text: [
             'time   source      query',
             '23:48  10.0.7.12   lab07.local',
@@ -166,6 +184,7 @@ export const root: DirNode = {
         {
           kind: 'file',
           name: 'access.log',
+          challenge: 'network/02',
           text: [
             'time   source      request                        status',
             '23:45  10.0.7.12   GET /admin                     200',
@@ -209,3 +228,24 @@ export const readText = (file: FileNode, state: GameState) =>
 
 /** Runs of 6+ printable ASCII characters, like the Unix `strings` command. */
 export const extractStrings = (text: string) => text.match(/[\x20-\x7e]{6,}/g) ?? [];
+
+/** The clue files in a challenge folder; hidden ones only when asked. */
+export function filesIn(category: Category, { hidden = false } = {}): FileNode[] {
+  const folder = root.children.find((c) => c.kind === 'dir' && c.category === category) as DirNode;
+  return folder.children.filter(
+    (f): f is FileNode => f.kind === 'file' && (hidden || !f.name.startsWith('.')),
+  );
+}
+
+/**
+ * Looks up an intranet address like lab07.local/admin (with or without http://).
+ * Returns the page, 'not-found' for a missing page, or 'no-host' for any other host.
+ */
+export function pageAt(address: string): string | 'not-found' | 'no-host' {
+  const match = address
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .match(/^lab07\.local(\/.*)?$/);
+  if (!match) return 'no-host';
+  return intranet[match[1] || '/'] ?? 'not-found';
+}
