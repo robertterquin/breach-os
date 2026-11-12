@@ -1,5 +1,9 @@
 # breach.os
 
+**Play it: [breach-os.vercel.app](https://breach-os.vercel.app)**
+
+![The breach.os desktop: locked folders, a terminal, and a sticky note](public/showcase.png)
+
 A capture-the-flag puzzle game set on an abandoned lab computer. The admin wiped LAB-07 and vanished; recover ten flags to find out why. The desktop starts corrupted and heals as flags are found.
 
 Built from the desktop shell of my midterm portfolio, which this repo used to hold. It's preserved in the tag [`portfolio-midterm-v1`](https://github.com/robertterquin/breach-os/tree/portfolio-midterm-v1).
@@ -37,6 +41,6 @@ src/
 
 ## Status
 
-Phases 0–7 done: the full game, from boot to ending, on desktop, phone and List view, playable by keyboard alone, with Lighthouse accessibility at 100 on every screen. Every challenge can be solved from the terminal or from its window; the desktop heals as flags are found, and `admin_message.txt` opens at 10/10. Next is Phase 8: playtest, balance and deploy.
+Phases 0–7 done and deployed to [breach-os.vercel.app](https://breach-os.vercel.app): the full game, from boot to ending, on desktop, phone and List view, playable by keyboard alone, with Lighthouse accessibility at 100 on every screen. Every challenge can be solved from the terminal or from its window; the desktop heals as flags are found, and `admin_message.txt` opens at 10/10. Still to do: playtest with real players and balance the hints and points.
 
 The repo never contains a flag in readable form, only its SHA-256 hash in `src/game/challenges.ts`. Three clue texts that show a flag are stored base64-encoded in `src/apps/terminal/files.ts`. The tests play the real game through the terminal and find each flag in the clues, so no flag is written in them.
